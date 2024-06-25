@@ -8,10 +8,10 @@ class ComicList extends ConsumerStatefulWidget {
   const ComicList({super.key});
 
   @override
-  _ComicListState createState() => _ComicListState();
+  ComicListState createState() => ComicListState();
 }
 
-class _ComicListState extends ConsumerState<ComicList> {
+class ComicListState extends ConsumerState<ComicList> {
   int totalComics = 0;
   int totalPages = 0;
   final int itemsPerPage = 10;
@@ -36,48 +36,48 @@ class _ComicListState extends ConsumerState<ComicList> {
     final error = ref.watch(errorProvider.notifier).state;
 
     return Scaffold(
-      appBar: const Header(),
-      body: Column(
-        children: [
-          if (comics.isEmpty && error == null)
-            const Center(child: CircularProgressIndicator())
-          else if (error != null)
-            Center(child: Text(error))
-          else
-            Expanded(
-              child: ListView.builder(
-                itemCount: comics.length,
-                itemBuilder: (context, index) {
-                  final comic = comics[index];
-                  return ListTile(
-                    leading: Image.network(
-                      comic.imagePath,
-                      width: 50,
-                      fit: BoxFit.cover,
-                    ),
-                    title: Text(comic.title),
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/comic',
-                        arguments: comic.id,
-                      );
-                    },
-                  );
-                },
+        appBar: const Header(),
+        body: SafeArea(
+            child: Column(
+          children: [
+            if (comics.isEmpty && error == null)
+              const Center(child: CircularProgressIndicator())
+            else if (error != null)
+              Center(child: Text(error))
+            else
+              Expanded(
+                child: ListView.builder(
+                  itemCount: comics.length,
+                  itemBuilder: (context, index) {
+                    final comic = comics[index];
+                    return ListTile(
+                      leading: Image.network(
+                        comic.imagePath,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      ),
+                      title: Text(comic.title),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/comic',
+                          arguments: comic.id,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
+            Pagination(
+              currentPage: currentPage,
+              totalPages: totalPages,
+              onPageChange: (page) {
+                ref.read(comicPageProvider.notifier).setPage(page);
+                fetchComics(ref, page);
+              },
             ),
-          Pagination(
-            currentPage: currentPage,
-            totalPages: totalPages,
-            onPageChange: (page) {
-              ref.read(comicPageProvider.notifier).setPage(page);
-              fetchComics(ref, page);
-            },
-          ),
-        ],
-      )
-    );
+          ],
+        )));
   }
 }
 
@@ -86,7 +86,8 @@ class Pagination extends StatelessWidget {
   final int totalPages;
   final ValueChanged<int> onPageChange;
 
-  const Pagination({super.key, 
+  const Pagination({
+    super.key,
     required this.currentPage,
     required this.totalPages,
     required this.onPageChange,
@@ -99,9 +100,8 @@ class Pagination extends StatelessWidget {
       children: [
         IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: currentPage > 1
-              ? () => onPageChange(currentPage - 1)
-              : null,
+          onPressed:
+              currentPage > 1 ? () => onPageChange(currentPage - 1) : null,
         ),
         for (int i = 1; i <= totalPages; i++)
           GestureDetector(

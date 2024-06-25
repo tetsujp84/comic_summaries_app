@@ -10,10 +10,10 @@ class ComicDetail extends ConsumerStatefulWidget {
   const ComicDetail({super.key, required this.id});
 
   @override
-  _ComicDetailState createState() => _ComicDetailState();
+  ComicDetailState createState() => ComicDetailState();
 }
 
-class _ComicDetailState extends ConsumerState<ComicDetail> {
+class ComicDetailState extends ConsumerState<ComicDetail> {
   bool showSpoilers = false;
 
   @override
@@ -40,61 +40,65 @@ class _ComicDetailState extends ConsumerState<ComicDetail> {
     }
 
     return Scaffold(
-      appBar: const Header(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Image.network(
-                  comic.imagePath,
-                  width: 200,
-                  fit: BoxFit.cover,
-                ),
+        appBar: const Header(),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Image.network(
+                      comic.imagePath,
+                      width: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    comic.title,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'ジャンル: ${comic.genre}',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'キャラクター紹介',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(comic.characters),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'あらすじ',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(comic.synopsis),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'ネタバレ',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: toggleSpoilers,
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: Text(showSpoilers ? 'ネタバレを隠す' : 'ネタバレを表示'),
+                  ),
+                  const SizedBox(height: 8),
+                  if (showSpoilers) Text(comic.spoilers),
+                ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                comic.title,
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'ジャンル: ${comic.genre}',
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'キャラクター紹介',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(comic.characters),
-              const SizedBox(height: 16),
-              const Text(
-                'あらすじ',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(comic.synopsis),
-              const SizedBox(height: 16),
-              const Text(
-                'ネタバレ',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: toggleSpoilers,
-                child: Text(showSpoilers ? 'ネタバレを隠す' : 'ネタバレを表示'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              ),
-              const SizedBox(height: 8),
-              if (showSpoilers) Text(comic.spoilers),
-            ],
+            ),
           ),
-        ),
-      ),
+        )
     );
   }
 }
