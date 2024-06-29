@@ -1,0 +1,11 @@
+workflows:
+  flutter_build:
+    name: Flutter Build
+    environment:
+      vars:
+        API_URL: $API_URL
+
+    scripts:
+      - name: Create .env file
+        script: |
+          echo "API_URL=$API_URL" > .env
