@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:comic_summaries_app/services/comic_service.dart';
 import 'package:comic_summaries_app/store/store.dart';
 import 'package:comic_summaries_app/components/header.dart';
+import 'package:go_router/go_router.dart';
 
 class ComicList extends ConsumerStatefulWidget {
   const ComicList({super.key});
@@ -58,11 +59,7 @@ class ComicListState extends ConsumerState<ComicList> {
                       ),
                       title: Text(comic.title),
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/comic',
-                          arguments: comic.id,
-                        );
+                        GoRouter.of(context).push('/comic/${comic.id}');
                       },
                     );
                   },
