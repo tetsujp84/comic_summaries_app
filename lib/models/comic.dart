@@ -1,5 +1,5 @@
 class Comic {
-  final String id;
+  final int id;
   final String title;
   final String synopsis;
   final String attraction;

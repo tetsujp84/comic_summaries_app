@@ -92,15 +92,28 @@ class Pagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (totalPages == 0) {
+      return const SizedBox.shrink();
+    }
+
+    int startPage = (currentPage - 2).clamp(1, totalPages);
+    int endPage = (currentPage + 2).clamp(1, totalPages);
+
+    if (currentPage <= 3) {
+      endPage = (currentPage + (5 - currentPage)).clamp(1, totalPages);
+    }
+    if (currentPage >= totalPages - 2) {
+      startPage = (totalPages - 4).clamp(1, totalPages);
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed:
-              currentPage > 1 ? () => onPageChange(currentPage - 1) : null,
+          onPressed: currentPage > 1 ? () => onPageChange(currentPage - 1) : null,
         ),
-        for (int i = 1; i <= totalPages; i++)
+        for (int i = startPage; i <= endPage; i++)
           GestureDetector(
             onTap: () => onPageChange(i),
             child: Container(
@@ -120,9 +133,7 @@ class Pagination extends StatelessWidget {
           ),
         IconButton(
           icon: const Icon(Icons.arrow_forward),
-          onPressed: currentPage < totalPages
-              ? () => onPageChange(currentPage + 1)
-              : null,
+          onPressed: currentPage < totalPages ? () => onPageChange(currentPage + 1) : null,
         ),
       ],
     );
